@@ -1,5 +1,7 @@
 src
 examples
 .babelrc
+.browserslistrc
 .gitignore
 webpack.config.js
+spec

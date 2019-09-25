@@ -2,8 +2,8 @@
 export function handleStatus(response) {
   const contentType = response.headers.get('content-type'),
     isOkay = response.ok;
-
-  if (contentType.indexOf('application/json') >= 0) {
+  console.log(contentType);
+  if (contentType && contentType.indexOf('application/json') >= 0) {
     if (!isOkay) return response.json().then(json => { throw json; });
     return response.json();
   }

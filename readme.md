@@ -1,17 +1,17 @@
-# A tiny fetch library built for the browser
+# A tiny fetch wrapper built for the browser
 
 ## Installing
 
 Using npm:
 
 ```bash
-$ npm install jfetch
+$ npm i @jontetz/jfetch
 ```
 
 ## Example
 
 ```js
-import jfetch from 'jfetch';
+import jfetch from '@jontetz/jfetch';
 ```
 
 Performing a `GET` request

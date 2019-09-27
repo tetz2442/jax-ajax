@@ -1,7 +1,7 @@
 {
-  "name": "jfetch",
-  "version": "0.1.0",
-  "description": "A tiny fetch library",
+  "name": "@jontetz/jfetch",
+  "version": "0.1.1",
+  "description": "A tiny fetch wrapper built for the browser",
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tetz2442/jax-ajax.git"
+    "url": "git+https://github.com/tetz2442/jfetch.git"
   },
   "author": "Jon Tetzlaff",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tetz2442/jax-ajax/issues"
+    "url": "https://github.com/tetz2442/jfetch/issues"
   },
-  "homepage": "https://github.com/tetz2442/jax-ajax#readme",
+  "homepage": "https://github.com/tetz2442/jfetch#readme",
   "devDependencies": {
     "@babel/core": "^7.5.0",
     "@babel/preset-env": "^7.5.3",

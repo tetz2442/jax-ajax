@@ -58,8 +58,8 @@ function convertObjectToParams(url, data) {
 function fetchAjax(url, options, customOptions) {
   const controller = new AbortController(),
     signal = controller.signal,
-    type = customOptions.type;
-  delete customOptions.type;
+    type = customOptions.responseType;
+  delete customOptions.responseType;
   options.headers = setHeaders(customOptions);
   options = Object.assign(options, customOptions);
   formatOptions(options);

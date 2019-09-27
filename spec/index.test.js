@@ -24,7 +24,7 @@ describe("get request", function () {
 
     ajax.get('test')
       .then(json => {
-        done.fail(error);
+        done.fail(json);
       })
       .catch(error => {
         expect(error.hello).toEqual('world');
@@ -50,7 +50,7 @@ describe("get request", function () {
     fetch.mockResponseOnce('*', { body: blob, status: 200, headers: { 'content-type': 'image/png' } }, { sendAsJson: false });
 
     ajax.get('test', null, {
-      type: 'blob'
+      responseType: 'blob'
     })
       .then(blob => {
         expect(blob.constructor.name).toBe('Blob');

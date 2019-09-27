@@ -1,4 +1,4 @@
-# A tiny fetch api
+# A tiny fetch library built for the browser
 
 ## Installing
 

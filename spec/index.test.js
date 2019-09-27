@@ -46,6 +46,24 @@ describe("get request", function () {
   });
 });
 
+describe("async get request", function () {
+  beforeEach(() => {
+    fetch.resetMocks();
+  });
+
+  test("can get async json", async done => {
+    fetch.mockResponseOnce('{ "hello": "world" }', { status: 200, headers: { 'content-type': 'application/json' } });
+
+    try {
+      const json = await ajax.get('test', { test: 1 });
+      expect(json.hello).toEqual('world');
+      done();
+    } catch (error) {
+      done.fail(error);
+    }
+  });
+});
+
 /*describe("abort controller", function () {
   beforeEach(() => {
     fetch.resetMocks();

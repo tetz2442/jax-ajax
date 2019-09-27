@@ -1,15 +1,23 @@
 // converts returned fetch data to valid type 
-export function handleStatus(response) {
-  const contentType = response.headers.get('content-type'),
-    isOkay = response.ok;
+function handleStatus(type) {
+  return function (response) {
+    const contentType = response.headers.get('content-type'),
+      isJson = contentType && contentType.indexOf('application/json') >= 0,
+      isOkay = response.ok;
 
-  if (contentType && contentType.indexOf('application/json') >= 0) {
-    if (!isOkay) return response.json().then(json => { throw json; });
-    return response.json();
-  }
-  else {
-    if (!isOkay) return response.text().then(text => { throw text; });
-    return response.text();
+    if (!isOkay && isJson) return response.json().then(json => { throw json; });
+
+    if (type === 'json' || isJson) {
+      return response.json();
+    }
+    else if (type === 'blob') {
+      if (!isOkay) return response.text().then(text => { throw text; });
+      return response.blob();
+    }
+    else {
+      if (!isOkay) return response.text().then(text => { throw text; });
+      return response.text();
+    }
   }
 }
 
@@ -33,9 +41,11 @@ function setHeaders(options) {
 function convertObjectToParams(url, data) {
   let addedParams = [],
     firstChar = '';
-  Object.keys(data).forEach((key) => {
-    if (typeof data[key] !== undefined && data[key] !== null) addedParams.push(key + '=' + encodeURIComponent(data[key]));
-  });
+  if (data) {
+    Object.keys(data).forEach((key) => {
+      if (typeof data[key] !== undefined && data[key] !== null) addedParams.push(key + '=' + encodeURIComponent(data[key]));
+    });
+  }
   const urlHasParams = url.indexOf('?') >= 0;
   if (addedParams.length) {
     firstChar = '?'
@@ -47,7 +57,9 @@ function convertObjectToParams(url, data) {
 // base function that sends the fetch request
 function fetchAjax(url, options, customOptions) {
   const controller = new AbortController(),
-    signal = controller.signal;
+    signal = controller.signal,
+    type = customOptions.type;
+  delete customOptions.type;
   options.headers = setHeaders(customOptions);
   options = Object.assign(options, customOptions);
   formatOptions(options);
@@ -55,7 +67,7 @@ function fetchAjax(url, options, customOptions) {
 
   const promise = new Promise((resolve, reject) => {
     fetch(url, options)
-      .then(handleStatus)
+      .then(handleStatus(type))
       .then(json => {
         resolve(json);
       })

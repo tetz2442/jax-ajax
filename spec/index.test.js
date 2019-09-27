@@ -44,6 +44,22 @@ describe("get request", function () {
         done.fail(error);
       });
   });
+
+  test("can get blob", done => {
+    const blob = new Blob(['a', 'b', 'c', 'd']);
+    fetch.mockResponseOnce('*', { body: blob, status: 200, headers: { 'content-type': 'image/png' } }, { sendAsJson: false });
+
+    ajax.get('test', null, {
+      type: 'blob'
+    })
+      .then(blob => {
+        expect(blob.constructor.name).toBe('Blob');
+        done();
+      })
+      .catch(error => {
+        done.fail(error);
+      });
+  });
 });
 
 describe("async get request", function () {

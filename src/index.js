@@ -1,3 +1,5 @@
+const defaultHeaders = {};
+
 // converts returned fetch data to valid type 
 function handleStatus(type) {
   return function (response) {
@@ -5,9 +7,8 @@ function handleStatus(type) {
       isJson = contentType && contentType.indexOf('application/json') >= 0,
       isOkay = response.ok;
 
-    if (!isOkay && isJson) return response.json().then(json => { throw json; });
-
     if (type === 'json' || isJson) {
+      if (!isOkay) return response.json().then(json => { throw json; });
       return response.json();
     }
     else if (type === 'blob') {
@@ -26,9 +27,7 @@ function formatOptions(options) {
 }
 
 function setHeaders(options) {
-  let headers = new Headers(Object.assign({
-    'Content-Type': 'application/json'
-  }, options.headers));
+  let headers = new Headers(Object.assign(defaultHeaders, options.headers));
   delete options.headers;
   return headers;
 }
@@ -64,9 +63,10 @@ function fetchAjax(url, options, customOptions) {
   options = Object.assign(options, customOptions);
   formatOptions(options);
   options.signal = signal;
+  let request;
 
   const promise = new Promise((resolve, reject) => {
-    fetch(url, options)
+    request = fetch(url, options)
       .then(handleStatus(type))
       .then(json => {
         resolve(json);
@@ -76,6 +76,7 @@ function fetchAjax(url, options, customOptions) {
       });
   });
   promise.controller = controller;
+  promise.originalFetch = request;
   return promise;
 }
 
@@ -145,5 +146,8 @@ export default {
   post,
   del,
   get,
-  put
+  put,
+  defaults: {
+    headers: defaultHeaders
+  }
 }

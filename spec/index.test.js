@@ -1,5 +1,4 @@
-import ajax from '../src/index';
-import 'whatwg-fetch';
+import jfetch from '../src/index';
 
 describe("get request", function () {
   beforeEach(() => {
@@ -9,7 +8,7 @@ describe("get request", function () {
   test("can get json", done => {
     fetch.mockResponseOnce('{ "hello": "world" }', { status: 200, headers: { 'content-type': 'application/json' } });
 
-    ajax.get('test', { test: 1 })
+    jfetch.get('test', { test: 1 })
       .then(json => {
         expect(json.hello).toEqual('world');
         done();
@@ -22,7 +21,7 @@ describe("get request", function () {
   test("fail get json", done => {
     fetch.mockResponseOnce('{ "hello": "world" }', { status: 401, headers: { 'content-type': 'application/json' } });
 
-    ajax.get('test')
+    jfetch.get('test')
       .then(json => {
         done.fail(json);
       })
@@ -35,7 +34,7 @@ describe("get request", function () {
   test("can get text", done => {
     fetch.mockResponseOnce('hello');
 
-    ajax.get('test')
+    jfetch.get('test')
       .then(json => {
         expect(json).toEqual('hello');
         done();
@@ -49,7 +48,7 @@ describe("get request", function () {
     const blob = new Blob(['a', 'b', 'c', 'd']);
     fetch.mockResponseOnce('*', { body: blob, status: 200, headers: { 'content-type': 'image/png' } }, { sendAsJson: false });
 
-    ajax.get('test', null, {
+    jfetch.get('test', null, {
       responseType: 'blob'
     })
       .then(blob => {
@@ -71,12 +70,36 @@ describe("async get request", function () {
     fetch.mockResponseOnce('{ "hello": "world" }', { status: 200, headers: { 'content-type': 'application/json' } });
 
     try {
-      const json = await ajax.get('test', { test: 1 });
+      const json = await jfetch.get('test', { test: 1 });
       expect(json.hello).toEqual('world');
       done();
     } catch (error) {
       done.fail(error);
     }
+  });
+});
+
+
+describe("modify default headers", function () {
+  beforeEach(() => {
+    fetch.resetMocks();
+  });
+
+  test("correct header sent", async done => {
+    fetch.mockResponse('{ "hello": "world" }', { status: 200, headers: { 'content-type': 'application/json' } });
+
+    jfetch.defaults.headers['Content-Type'] = 'application/json';
+
+    const request = jfetch.get('test');
+
+    request.then(json => {
+      expect(fetch.mock.calls[0][1].headers.get('Content-Type')).toEqual('application/json');
+      done();
+    })
+      .catch(error => {
+        console.log(error);
+        done.fail(error);
+      });
   });
 });
 
@@ -88,7 +111,7 @@ describe("async get request", function () {
   test("can abort", done => {
     fetch.mockResponseOnce(() => new Promise(resolve => setTimeout(() => resolve({ body: 'ok' }), 500)));
 
-    const request = ajax.get('test');
+    const request = jfetch.get('test');
 
     request.then(json => {
       done.fail('Did not abort');

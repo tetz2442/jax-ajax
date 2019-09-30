@@ -56,6 +56,80 @@ async function getUser() {
 }
 ```
 
+Performing a `POST` request
+
+```js
+// Make a request to create a new user
+jfetch.post('/user', {
+  name: 'John Smith'
+})
+  .then(response => {
+    // handle success
+    console.log(response);
+  })
+  .catch(error => {
+    // handle error
+    console.log(error);
+  })
+  .finally(() => {
+    // always executed
+  });
+```
+
+Performing a `PUT` request
+
+```js
+// Make a request to update a users name
+jfetch.put('/user/123', {
+  name: 'John Smith'
+})
+  .then(response => {
+    // handle success
+    console.log(response);
+  })
+  .catch(error => {
+    // handle error
+    console.log(error);
+  })
+  .finally(() => {
+    // always executed
+  });
+```
+
+Performing a `DELETE` request
+
+```js
+// Make a request for a user with a given ID
+jfetch.del('/user/1234/delete')
+  .then(response => {
+    // handle success
+    console.log(response);
+  })
+  .catch(error => {
+    // handle error
+    console.log(error);
+  })
+  .finally(() => {
+    // always executed
+  });
+
+// Optionally the request above could also be done as
+jfetch.del('/user', {
+  ID: 12345
+})
+  .then(response => {
+    // handle success
+    console.log(response);
+  })
+  .catch(error => {
+    // handle error
+    console.log(error);
+  })
+  .finally(() => {
+    // always executed
+  });
+```
+
 Aborting a request
 
 ```js
@@ -75,4 +149,40 @@ request.then(response => {
 
 // abort the request
 request.controller.abort();
+```
+
+## Fetch options
+
+You can modify the fetch itself by passing an object to the third parameter
+
+```js
+jfetch.post('/user/12345', {
+    ID: 12345
+  }, {
+    responseType: 'text', // json, text or blob - this option is specific to jfetch
+    credentials: 'none', // this removes the default 'include' that is included in each request
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    console.log(response);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+  .finally(() => {
+    // always executed
+  });  
+```
+
+## Defaults
+
+`credentials: 'include'` is included in the requests by default to send cookie data. To remove that setting, you can pass `credentials: 'none'` in the third parameter.
+
+Set some default headers that should be in each request  
+
+```js
+import jfetch from '@jontetz/jfetch';
+jfetch.defaults.headers['Content-Type'] = 'application/json';
 ```

@@ -181,8 +181,10 @@ jfetch.post('/user/12345', {
 `credentials: 'include'` is included in the requests by default to send cookie data. To remove that setting, you can pass `credentials: 'none'` in the third parameter.
 
 Set some default headers that should be in each request  
+Or set the base url that should be prepended to each request  
 
 ```js
 import jfetch from '@jontetz/jfetch';
 jfetch.defaults.headers['Content-Type'] = 'application/json';
+jfetch.defaults.baseUrl = '/test';
 ```

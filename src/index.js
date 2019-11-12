@@ -1,4 +1,8 @@
 const defaultHeaders = {};
+const defaults = {
+  headers: defaultHeaders,
+  baseUrl: ''
+};
 
 // converts returned fetch data to valid type 
 function handleStatus(type) {
@@ -66,7 +70,7 @@ function fetchAjax(url, options, customOptions) {
   let request;
 
   const promise = new Promise((resolve, reject) => {
-    request = fetch(url, options)
+    request = fetch(defaults.baseUrl + url, options)
       .then(handleStatus(type))
       .then(json => {
         resolve(json);
@@ -147,7 +151,5 @@ export default {
   del,
   get,
   put,
-  defaults: {
-    headers: defaultHeaders
-  }
+  defaults: defaults
 }

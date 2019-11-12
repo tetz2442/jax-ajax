@@ -85,15 +85,18 @@ describe("modify default headers", function () {
     fetch.resetMocks();
   });
 
-  test("correct header sent", async done => {
+  test("correct header sent, base url changed", async done => {
     fetch.mockResponse('{ "hello": "world" }', { status: 200, headers: { 'content-type': 'application/json' } });
 
     jfetch.defaults.headers['Content-Type'] = 'application/json';
+    jfetch.defaults.baseUrl = '/test';
 
     const request = jfetch.get('test');
 
     request.then(json => {
       expect(fetch.mock.calls[0][1].headers.get('Content-Type')).toEqual('application/json');
+      // console.log(fetch.mock.calls[0][0]).toEqual();
+      expect(fetch.mock.calls[0][0]).toEqual('/testtest');
       done();
     })
       .catch(error => {
